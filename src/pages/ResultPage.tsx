@@ -7,7 +7,7 @@ import ApiModeIndicator from '../components/ApiModeIndicator';
 function ResultPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { personalInfo, answers, resetSurvey, pinNumber } = useSurveyStore();
+  const { personalInfo, resetSurvey, pinNumber } = useSurveyStore();
 
   const handleNewSurvey = () => {
     resetSurvey();
