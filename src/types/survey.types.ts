@@ -4,7 +4,8 @@ export type QuestionType =
   | 'multiple_choice'
   | 'text'
   | 'rating'
-  | 'scale';
+  | 'scale'
+  | 'yes_no';
 
 // 질문 카테고리
 export type QuestionCategory =
@@ -97,4 +98,5 @@ export interface SubmitResponse {
   resultId: string;
   participantId: string;
   message: string;
+  pinNumber?: string;
 }

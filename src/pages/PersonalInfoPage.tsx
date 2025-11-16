@@ -1,18 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useSurveyStore } from '../store/surveyStore';
 import { PersonalInfo } from '../types';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import ApiModeIndicator from '../components/ApiModeIndicator';
 
 interface PersonalInfoForm {
   email: string;
   name: string;
   ageGroup: string;
   gender: string;
-  phone?: string;
+  eventCode?: string;
+  marketingConsent?: boolean;
 }
 
 function PersonalInfoPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { setPersonalInfo, personalInfo } = useSurveyStore();
 
   const {
@@ -26,7 +31,8 @@ function PersonalInfoPage() {
       name: '',
       ageGroup: '',
       gender: '',
-      phone: ''
+      eventCode: '',
+      marketingConsent: false
     }
   });
 
@@ -36,168 +42,194 @@ function PersonalInfoPage() {
   };
 
   const ageGroups = [
-    '50대 미만',
-    '50대',
-    '60대',
-    '70대',
-    '80대 이상'
+    { value: '50s', label: t('personalInfo.ageGroups.50s') },
+    { value: '60s', label: t('personalInfo.ageGroups.60s') },
+    { value: '70s', label: t('personalInfo.ageGroups.70s') },
+    { value: '80plus', label: t('personalInfo.ageGroups.80plus') }
   ];
 
-  const genders = ['남성', '여성', '기타'];
+  const genders = [
+    { value: 'male', label: t('personalInfo.genders.male') },
+    { value: 'female', label: t('personalInfo.genders.female') },
+    { value: 'other', label: t('personalInfo.genders.other') }
+  ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4 pt-20">
+      {/* Header with Language Switcher and API Mode */}
+      <div className="fixed top-4 right-4 flex items-center gap-4 z-50">
+        <ApiModeIndicator />
+        <LanguageSwitcher />
+      </div>
+
       <div className="max-w-2xl w-full">
-        <div className="card">
+        <div className="bg-white rounded-2xl shadow-primary-lg p-8 md:p-12">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              인적정보 입력
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-warm rounded-full mb-4 shadow-primary">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-2">
+              {t('personalInfo.title')}
             </h1>
             <p className="text-gray-600">
-              설문 진행을 위해 기본 정보를 입력해주세요
+              {t('personalInfo.description')}
             </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* 이름 */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                이름 <span className="text-red-500">*</span>
+              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('personalInfo.name')} <span className="text-primary-500">*</span>
               </label>
               <input
                 id="name"
                 type="text"
                 {...register('name', {
-                  required: '이름을 입력해주세요',
+                  required: t('errors.required'),
                   minLength: {
                     value: 2,
-                    message: '이름은 최소 2자 이상이어야 합니다'
+                    message: t('errors.required')
                   }
                 })}
-                className="input-field"
-                placeholder="홍길동"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-colors"
+                placeholder={t('personalInfo.namePlaceholder')}
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                <p className="mt-1 text-sm text-primary-600">{errors.name.message}</p>
               )}
             </div>
 
             {/* 이메일 */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                이메일 <span className="text-red-500">*</span>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('personalInfo.email')} <span className="text-primary-500">*</span>
               </label>
               <input
                 id="email"
                 type="email"
                 {...register('email', {
-                  required: '이메일을 입력해주세요',
+                  required: t('errors.required'),
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: '올바른 이메일 형식이 아닙니다'
+                    message: t('errors.invalidEmail')
                   }
                 })}
-                className="input-field"
-                placeholder="example@email.com"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-colors"
+                placeholder={t('personalInfo.emailPlaceholder')}
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-primary-600">{errors.email.message}</p>
               )}
             </div>
 
             {/* 연령대 */}
             <div>
-              <label htmlFor="ageGroup" className="block text-sm font-medium text-gray-700 mb-2">
-                연령대 <span className="text-red-500">*</span>
+              <label htmlFor="ageGroup" className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('personalInfo.ageGroup')} <span className="text-primary-500">*</span>
               </label>
               <select
                 id="ageGroup"
                 {...register('ageGroup', {
-                  required: '연령대를 선택해주세요'
+                  required: t('errors.required')
                 })}
-                className="input-field"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-colors bg-white"
               >
-                <option value="">연령대를 선택하세요</option>
+                <option value="">{t('personalInfo.ageGroup')}</option>
                 {ageGroups.map((age) => (
-                  <option key={age} value={age}>
-                    {age}
+                  <option key={age.value} value={age.value}>
+                    {age.label}
                   </option>
                 ))}
               </select>
               {errors.ageGroup && (
-                <p className="mt-1 text-sm text-red-600">{errors.ageGroup.message}</p>
+                <p className="mt-1 text-sm text-primary-600">{errors.ageGroup.message}</p>
               )}
             </div>
 
             {/* 성별 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                성별 <span className="text-red-500">*</span>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                {t('personalInfo.gender')} <span className="text-primary-500">*</span>
               </label>
-              <div className="flex space-x-4">
+              <div className="grid grid-cols-3 gap-3">
                 {genders.map((gender) => (
-                  <label key={gender} className="flex items-center">
+                  <label
+                    key={gender.value}
+                    className="relative flex items-center justify-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-primary-300 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50"
+                  >
                     <input
                       type="radio"
-                      value={gender}
+                      value={gender.value}
                       {...register('gender', {
-                        required: '성별을 선택해주세요'
+                        required: t('errors.required')
                       })}
-                      className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+                      className="sr-only"
                     />
-                    <span className="ml-2 text-gray-700">{gender}</span>
+                    <span className="text-sm font-medium text-gray-700">{gender.label}</span>
+                    <div className="absolute top-2 right-2 w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center transition-colors peer-checked:border-primary-500">
+                      <div className="w-3 h-3 bg-primary-500 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity" />
+                    </div>
                   </label>
                 ))}
               </div>
               {errors.gender && (
-                <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
+                <p className="mt-1 text-sm text-primary-600">{errors.gender.message}</p>
               )}
             </div>
 
-            {/* 전화번호 (선택) */}
+            {/* 이벤트 코드 (선택) */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                전화번호 (선택)
+              <label htmlFor="eventCode" className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('personalInfo.eventCode')}
               </label>
               <input
-                id="phone"
-                type="tel"
-                {...register('phone', {
-                  pattern: {
-                    value: /^[0-9-]+$/,
-                    message: '올바른 전화번호 형식이 아닙니다'
-                  }
-                })}
-                className="input-field"
-                placeholder="010-1234-5678"
+                id="eventCode"
+                type="text"
+                {...register('eventCode')}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-colors"
+                placeholder={t('personalInfo.eventCodePlaceholder')}
               />
-              {errors.phone && (
-                <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-              )}
+            </div>
+
+            {/* 마케팅 동의 */}
+            <div className="bg-gray-50 rounded-xl p-4">
+              <label className="flex items-start cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register('marketingConsent')}
+                  className="mt-1 w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+                />
+                <span className="ml-3 text-sm text-gray-700">
+                  {t('personalInfo.marketingConsent')}
+                </span>
+              </label>
             </div>
 
             {/* 버튼 */}
-            <div className="flex space-x-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="btn-secondary flex-1"
+                className="flex-1 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
               >
-                이전
+                {t('personalInfo.backButton')}
               </button>
               <button
                 type="submit"
                 disabled={!isValid}
-                className="btn-primary flex-1"
+                className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  isValid
+                    ? 'bg-gradient-warm text-white hover:shadow-primary-lg transform hover:-translate-y-0.5'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
-                다음
+                {t('personalInfo.nextButton')}
               </button>
             </div>
           </form>
-
-          <p className="mt-6 text-sm text-gray-500 text-center">
-            입력하신 정보는 브라우저에 안전하게 저장됩니다
-          </p>
         </div>
       </div>
     </div>

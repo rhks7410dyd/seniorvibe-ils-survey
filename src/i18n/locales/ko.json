@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "SeniorVibe ILS 설문조사",
+    "subtitle": "박람회 참가자 설문조사"
+  },
+  "landing": {
+    "welcome": "환영합니다",
+    "description": "설문조사에 참여해 주셔서 감사합니다. 귀하의 소중한 의견을 듣고 싶습니다.",
+    "startButton": "설문 시작하기",
+    "estimatedTime": "예상 소요 시간",
+    "minutes": "분",
+    "features": {
+      "anonymous": "익명 참여",
+      "autoSave": "자동 저장",
+      "mobile": "모바일 최적화"
+    }
+  },
+  "personalInfo": {
+    "title": "개인정보 입력",
+    "description": "설문조사를 시작하기 전에 기본 정보를 입력해주세요.",
+    "email": "이메일",
+    "emailPlaceholder": "your@email.com",
+    "name": "이름",
+    "namePlaceholder": "이름을 입력하세요",
+    "ageGroup": "연령대",
+    "ageGroups": {
+      "50s": "50대",
+      "60s": "60대",
+      "70s": "70대",
+      "80plus": "80대 이상"
+    },
+    "gender": "성별",
+    "genders": {
+      "male": "남성",
+      "female": "여성",
+      "other": "기타"
+    },
+    "eventCode": "행사 코드 (선택)",
+    "eventCodePlaceholder": "행사 코드를 입력하세요",
+    "marketingConsent": "마케팅 정보 수신 동의",
+    "nextButton": "다음",
+    "backButton": "이전"
+  },
+  "survey": {
+    "title": "설문조사",
+    "progress": "진행률",
+    "question": "질문",
+    "of": "/",
+    "required": "필수",
+    "optional": "선택",
+    "selectOne": "하나를 선택하세요",
+    "selectMultiple": "모두 선택하세요",
+    "textPlaceholder": "답변을 입력하세요",
+    "nextButton": "다음",
+    "previousButton": "이전",
+    "submitButton": "제출하기",
+    "saveProgress": "진행 상황 저장됨"
+  },
+  "result": {
+    "title": "설문 완료",
+    "thankYou": "설문조사에 참여해 주셔서 감사합니다!",
+    "description": "귀하의 의견은 더 나은 서비스를 만드는 데 큰 도움이 됩니다.",
+    "resultId": "결과 ID",
+    "downloadButton": "결과 다운로드",
+    "shareButton": "공유하기",
+    "newSurveyButton": "새 설문조사 시작",
+    "pinNumberTitle": "PIN 번호",
+    "answeredQuestions": "답변한 질문"
+  },
+  "errors": {
+    "required": "필수 항목입니다",
+    "invalidEmail": "유효한 이메일 주소를 입력하세요",
+    "networkError": "네트워크 오류가 발생했습니다",
+    "submitError": "제출 중 오류가 발생했습니다",
+    "loadError": "데이터를 불러오는 중 오류가 발생했습니다"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語",
+    "select": "언어 선택"
+  },
+  "mode": {
+    "mock": "Mock 모드",
+    "server": "서버 모드"
+  }
+}

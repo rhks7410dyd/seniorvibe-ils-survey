@@ -27,6 +27,10 @@ interface SurveyState {
   startedAt: string | null;
   setStartedAt: (time: string) => void;
 
+  // PIN 번호
+  pinNumber: string | null;
+  setPinNumber: (pin: string) => void;
+
   // 유틸리티
   resetSurvey: () => void;
   getProgress: () => number;
@@ -68,13 +72,17 @@ export const useSurveyStore = create<SurveyState>()(
       startedAt: null,
       setStartedAt: (time) => set({ startedAt: time }),
 
+      pinNumber: null,
+      setPinNumber: (pin) => set({ pinNumber: pin }),
+
       resetSurvey: () => set({
         sessionId: uuidv4(),
         personalInfo: null,
         questions: [],
         answers: {},
         currentQuestionIndex: 0,
-        startedAt: null
+        startedAt: null,
+        pinNumber: null
       }),
 
       getProgress: () => {
@@ -96,7 +104,8 @@ export const useSurveyStore = create<SurveyState>()(
         personalInfo: state.personalInfo,
         answers: state.answers,
         currentQuestionIndex: state.currentQuestionIndex,
-        startedAt: state.startedAt
+        startedAt: state.startedAt,
+        pinNumber: state.pinNumber
       })
     }
   )

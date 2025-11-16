@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { useSurveyStore } from '../store/surveyStore';
 import { surveyAPI } from '../services/api';
-import { Question } from '../types';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import ApiModeIndicator from '../components/ApiModeIndicator';
 
 function SurveyPage() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const {
     personalInfo,
     questions,
@@ -18,7 +21,8 @@ function SurveyPage() {
     getProgress,
     sessionId,
     startedAt,
-    setStartedAt
+    setStartedAt,
+    setPinNumber
   } = useSurveyStore();
 
   const [currentAnswer, setCurrentAnswer] = useState<any>(null);
@@ -33,25 +37,32 @@ function SurveyPage() {
     }
   }, [personalInfo, navigate, startedAt, setStartedAt]);
 
-  // 질문 목록 가져오기
-  const { isLoading, error } = useQuery({
-    queryKey: ['questions'],
-    queryFn: surveyAPI.getQuestions,
-    enabled: questions.length === 0,
-    onSuccess: (data) => {
-      setQuestions(data);
-    }
+  // 질문 목록 가져오기 (언어에 따라)
+  const { data: questionsData, isLoading, error } = useQuery({
+    queryKey: ['questions', i18n.language],
+    queryFn: () => surveyAPI.getQuestions({ lang: i18n.language })
   });
+
+  // 질문 데이터를 스토어에 저장
+  useEffect(() => {
+    if (questionsData && questionsData.length > 0) {
+      setQuestions(questionsData);
+    }
+  }, [questionsData, setQuestions]);
 
   // 설문 제출 mutation
   const submitMutation = useMutation({
     mutationFn: surveyAPI.submitSurvey,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // PIN 번호가 있으면 저장
+      if (data.pinNumber) {
+        setPinNumber(data.pinNumber);
+      }
       navigate('/result');
     },
     onError: (error) => {
       console.error('Failed to submit survey:', error);
-      alert('설문 제출에 실패했습니다. 다시 시도해주세요.');
+      alert(t('errors.submitError'));
     }
   });
 
@@ -65,10 +76,13 @@ function SurveyPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">질문을 불러오는 중...</p>
+          <div className="relative w-20 h-20 mx-auto mb-4">
+            <div className="absolute inset-0 border-4 border-primary-200 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-primary-500 rounded-full border-t-transparent animate-spin"></div>
+          </div>
+          <p className="text-gray-600">{t('errors.loadError')}</p>
         </div>
       </div>
     );
@@ -76,18 +90,39 @@ function SurveyPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="card max-w-md text-center">
-          <p className="text-red-600 mb-4">질문을 불러오는데 실패했습니다.</p>
-          <button onClick={() => navigate('/')} className="btn-primary">
-            처음으로 돌아가기
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-primary-lg p-8 max-w-md text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <p className="text-red-600 mb-6">{t('errors.loadError')}</p>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-gradient-warm text-white px-6 py-3 rounded-xl font-semibold hover:shadow-primary-lg transition-all"
+          >
+            {t('personalInfo.backButton')}
           </button>
         </div>
       </div>
     );
   }
 
-  if (questions.length === 0) return null;
+  // 질문이 아직 로드되지 않은 경우 로딩 표시
+  if (questions.length === 0 || !questions[currentQuestionIndex]) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative w-20 h-20 mx-auto mb-4">
+            <div className="absolute inset-0 border-4 border-primary-200 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-primary-500 rounded-full border-t-transparent animate-spin"></div>
+          </div>
+          <p className="text-gray-600">{t('errors.loadError')}</p>
+        </div>
+      </div>
+    );
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = getProgress();
@@ -113,6 +148,21 @@ function SurveyPage() {
     }
   };
 
+  // 선택지 클릭 시 자동으로 다음 질문으로 이동
+  const handleAutoNext = (value: any) => {
+    setCurrentAnswer(value);
+    setAnswer(currentQuestion.id, value);
+
+    // 약간의 지연 후 다음 질문으로 이동 (사용자가 선택을 확인할 수 있도록)
+    setTimeout(() => {
+      if (isLastQuestion) {
+        handleSubmit();
+      } else {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      }
+    }, 300);
+  };
+
   const handleSubmit = () => {
     if (!personalInfo) return;
 
@@ -132,24 +182,27 @@ function SurveyPage() {
         return (
           <div className="space-y-3">
             {currentQuestion.options?.map((option) => (
-              <label
+              <button
                 key={option.id}
-                className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                type="button"
+                onClick={() => handleAutoNext(option.value)}
+                className={`w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
                   currentAnswer === option.value
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-200 hover:border-primary-300'
+                    ? 'border-primary-500 bg-primary-50 shadow-md'
+                    : 'border-gray-200 hover:border-primary-300 hover:bg-primary-25'
                 }`}
               >
-                <input
-                  type="radio"
-                  name={currentQuestion.id}
-                  value={option.value}
-                  checked={currentAnswer === option.value}
-                  onChange={(e) => setCurrentAnswer(Number(e.target.value) || e.target.value)}
-                  className="w-4 h-4 text-primary-600 focus:ring-primary-500"
-                />
-                <span className="ml-3 text-gray-700">{option.text}</span>
-              </label>
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  currentAnswer === option.value
+                    ? 'border-primary-500 bg-primary-500'
+                    : 'border-gray-400'
+                }`}>
+                  {currentAnswer === option.value && (
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  )}
+                </div>
+                <span className="ml-3 text-gray-700 font-medium">{option.text}</span>
+              </button>
             ))}
           </div>
         );
@@ -158,16 +211,16 @@ function SurveyPage() {
         return (
           <div className="space-y-3">
             {currentQuestion.options?.map((option) => {
-              const selectedValues = currentAnswer || [];
+              const selectedValues = Array.isArray(currentAnswer) ? currentAnswer : [];
               const isChecked = selectedValues.includes(option.value);
 
               return (
                 <label
                   key={option.id}
-                  className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
                     isChecked
-                      ? 'border-primary-600 bg-primary-50'
-                      : 'border-gray-200 hover:border-primary-300'
+                      ? 'border-primary-500 bg-primary-50 shadow-md'
+                      : 'border-gray-200 hover:border-primary-300 hover:bg-primary-25'
                   }`}
                 >
                   <input
@@ -179,9 +232,9 @@ function SurveyPage() {
                         : selectedValues.filter((v: any) => v !== option.value);
                       setCurrentAnswer(newValues);
                     }}
-                    className="w-4 h-4 text-primary-600 focus:ring-primary-500 rounded"
+                    className="w-5 h-5 text-primary-500 focus:ring-primary-400 rounded"
                   />
-                  <span className="ml-3 text-gray-700">{option.text}</span>
+                  <span className="ml-3 text-gray-700 font-medium">{option.text}</span>
                 </label>
               );
             })}
@@ -194,8 +247,8 @@ function SurveyPage() {
             value={currentAnswer || ''}
             onChange={(e) => setCurrentAnswer(e.target.value)}
             rows={5}
-            className="input-field resize-none"
-            placeholder="답변을 입력해주세요..."
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-colors resize-none"
+            placeholder={t('survey.textPlaceholder')}
           />
         );
 
@@ -209,27 +262,96 @@ function SurveyPage() {
         );
 
         return (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
+          <div className="space-y-6">
+            <div className="flex justify-between items-center gap-2">
               {values.map((value) => (
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setCurrentAnswer(value)}
-                  className={`w-14 h-14 rounded-full font-semibold transition-all ${
+                  onClick={() => handleAutoNext(value)}
+                  className={`flex-1 h-16 rounded-xl font-bold text-lg transition-all ${
                     currentAnswer === value
-                      ? 'bg-primary-600 text-white scale-110'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-gradient-warm text-white scale-105 shadow-primary'
+                      : 'bg-gray-100 text-gray-600 hover:bg-primary-100 hover:text-primary-600'
                   }`}
                 >
                   {value}
                 </button>
               ))}
             </div>
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>낮음</span>
-              <span>높음</span>
+            {currentQuestion.description && (
+              <p className="text-sm text-gray-600 text-center">{currentQuestion.description}</p>
+            )}
+          </div>
+        );
+
+      case 'yes_no':
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-6">
+              {/* O 버튼 */}
+              <button
+                type="button"
+                onClick={() => handleAutoNext(true)}
+                className={`relative p-8 rounded-2xl border-4 transition-all duration-300 transform ${
+                  currentAnswer === true
+                    ? 'border-primary-500 bg-primary-50 scale-105 shadow-primary-lg'
+                    : 'border-gray-200 bg-white hover:border-primary-300 hover:scale-102'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-4 transition-all ${
+                    currentAnswer === true
+                      ? 'bg-gradient-warm'
+                      : 'bg-gray-100'
+                  }`}>
+                    <span className={`text-5xl font-bold ${
+                      currentAnswer === true ? 'text-white' : 'text-gray-400'
+                    }`}>
+                      O
+                    </span>
+                  </div>
+                  <span className={`text-xl font-semibold ${
+                    currentAnswer === true ? 'text-primary-700' : 'text-gray-500'
+                  }`}>
+                    {t('personalInfo.genders.male') === '男性' ? 'はい' : t('personalInfo.genders.male') === 'Male' ? 'Yes' : '예'}
+                  </span>
+                </div>
+              </button>
+
+              {/* X 버튼 */}
+              <button
+                type="button"
+                onClick={() => handleAutoNext(false)}
+                className={`relative p-8 rounded-2xl border-4 transition-all duration-300 transform ${
+                  currentAnswer === false
+                    ? 'border-red-500 bg-red-50 scale-105 shadow-lg shadow-red-200'
+                    : 'border-gray-200 bg-white hover:border-red-300 hover:scale-102'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-4 transition-all ${
+                    currentAnswer === false
+                      ? 'bg-gradient-to-br from-red-500 to-red-600'
+                      : 'bg-gray-100'
+                  }`}>
+                    <span className={`text-5xl font-bold ${
+                      currentAnswer === false ? 'text-white' : 'text-gray-400'
+                    }`}>
+                      X
+                    </span>
+                  </div>
+                  <span className={`text-xl font-semibold ${
+                    currentAnswer === false ? 'text-red-700' : 'text-gray-500'
+                  }`}>
+                    {t('personalInfo.genders.male') === '男性' ? 'いいえ' : t('personalInfo.genders.male') === 'Male' ? 'No' : '아니오'}
+                  </span>
+                </div>
+              </button>
             </div>
+            {currentQuestion.description && (
+              <p className="text-sm text-gray-600 text-center mt-4">{currentQuestion.description}</p>
+            )}
           </div>
         );
 
@@ -239,70 +361,89 @@ function SurveyPage() {
   };
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-8 px-4 pt-24">
+      {/* Header with Language Switcher and API Mode */}
+      <div className="fixed top-4 right-4 flex items-center gap-4 z-50">
+        <ApiModeIndicator />
+        <LanguageSwitcher />
+      </div>
+
       <div className="max-w-3xl mx-auto">
         {/* 진행률 */}
         <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>질문 {currentQuestionIndex + 1} / {questions.length}</span>
-            <span>{progress.toFixed(0)}% 완료</span>
+          <div className="flex justify-between text-sm font-medium mb-3">
+            <span className="text-gray-600">
+              {t('survey.question')} {currentQuestionIndex + 1} {t('survey.of')} {questions.length}
+            </span>
+            <span className="text-primary-600">
+              {progress.toFixed(0)}% {t('survey.progress')}
+            </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
             <div
-              className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-warm h-3 rounded-full transition-all duration-500 shadow-sm"
               style={{ width: `${(currentQuestionIndex / questions.length) * 100}%` }}
             />
           </div>
         </div>
 
         {/* 질문 카드 */}
-        <div className="card">
-          <div className="mb-6">
-            <div className="inline-block px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-3">
-              {currentQuestion.category}
+        <div className="bg-white rounded-2xl shadow-primary-lg p-8 md:p-12">
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-700 rounded-full text-sm font-semibold mb-4">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+              </svg>
+              {currentQuestion.required ? t('survey.required') : t('survey.optional')}
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
               {currentQuestion.title}
             </h2>
             {currentQuestion.description && (
-              <p className="text-gray-600">{currentQuestion.description}</p>
-            )}
-            {currentQuestion.required && (
-              <p className="text-sm text-red-600 mt-2">* 필수 질문입니다</p>
+              <p className="text-gray-600 text-lg">{currentQuestion.description}</p>
             )}
           </div>
 
           <div className="mb-8">{renderQuestion()}</div>
 
-          {/* 버튼 */}
-          <div className="flex space-x-4">
+          {/* 버튼 - 서술형 질문이나 다중 선택 질문일 때만 다음 버튼 표시 */}
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               type="button"
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
-              className="btn-secondary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              이전
+              {t('survey.previousButton')}
             </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={!canProceed || submitMutation.isPending}
-              className="btn-primary flex-1"
-            >
-              {submitMutation.isPending
-                ? '제출 중...'
-                : isLastQuestion
-                ? '제출하기'
-                : '다음'}
-            </button>
+            {(currentQuestion.type === 'text' || currentQuestion.type === 'multiple_choice') && (
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={!canProceed || submitMutation.isPending}
+                className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  canProceed && !submitMutation.isPending
+                    ? 'bg-gradient-warm text-white hover:shadow-primary-lg transform hover:-translate-y-0.5'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                {submitMutation.isPending
+                  ? t('survey.submitButton') + '...'
+                  : isLastQuestion
+                  ? t('survey.submitButton')
+                  : t('survey.nextButton')}
+              </button>
+            )}
           </div>
         </div>
 
         {/* 자동 저장 안내 */}
-        <p className="text-center text-sm text-gray-500 mt-4">
-          답변은 자동으로 저장됩니다
-        </p>
+        <div className="flex items-center justify-center gap-2 mt-6 text-sm text-gray-500">
+          <svg className="w-4 h-4 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span>{t('survey.saveProgress')}</span>
+        </div>
       </div>
     </div>
   );

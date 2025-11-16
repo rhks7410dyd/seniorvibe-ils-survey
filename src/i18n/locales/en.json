@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "SeniorVibe ILS Survey",
+    "subtitle": "Exhibition Participant Survey"
+  },
+  "landing": {
+    "welcome": "Welcome",
+    "description": "Thank you for participating in our survey. We value your opinion.",
+    "startButton": "Start Survey",
+    "estimatedTime": "Estimated Time",
+    "minutes": "minutes",
+    "features": {
+      "anonymous": "Anonymous",
+      "autoSave": "Auto Save",
+      "mobile": "Mobile Optimized"
+    }
+  },
+  "personalInfo": {
+    "title": "Personal Information",
+    "description": "Please enter your basic information before starting the survey.",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "ageGroup": "Age Group",
+    "ageGroups": {
+      "50s": "50s",
+      "60s": "60s",
+      "70s": "70s",
+      "80plus": "80+"
+    },
+    "gender": "Gender",
+    "genders": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "eventCode": "Event Code (Optional)",
+    "eventCodePlaceholder": "Enter event code",
+    "marketingConsent": "Agree to receive marketing information",
+    "nextButton": "Next",
+    "backButton": "Back"
+  },
+  "survey": {
+    "title": "Survey",
+    "progress": "Progress",
+    "question": "Question",
+    "of": "of",
+    "required": "Required",
+    "optional": "Optional",
+    "selectOne": "Select one",
+    "selectMultiple": "Select all that apply",
+    "textPlaceholder": "Enter your answer",
+    "nextButton": "Next",
+    "previousButton": "Previous",
+    "submitButton": "Submit",
+    "saveProgress": "Progress saved"
+  },
+  "result": {
+    "title": "Survey Completed",
+    "thankYou": "Thank you for participating in our survey!",
+    "description": "Your feedback helps us create better services.",
+    "resultId": "Result ID",
+    "downloadButton": "Download Results",
+    "shareButton": "Share",
+    "newSurveyButton": "Start New Survey",
+    "pinNumberTitle": "PIN Number",
+    "answeredQuestions": "Answered Questions"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "networkError": "A network error occurred",
+    "submitError": "An error occurred during submission",
+    "loadError": "An error occurred while loading data"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語",
+    "select": "Select Language"
+  },
+  "mode": {
+    "mock": "Mock Mode",
+    "server": "Server Mode"
+  }
+}

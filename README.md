@@ -4,10 +4,13 @@
 
 ## 주요 특징
 
-- 회원가입 불필요: OAuth2 인증 없이 퍼블릭 접근 가능
-- 자동 저장: 브라우저 LocalStorage를 활용한 진행상황 자동 저장
-- 반응형 디자인: 모바일, 태블릿, 데스크탑 모든 환경 지원
-- 간편한 배포: GitHub Pages를 통한 정적 호스팅
+- **다국어 지원**: 한국어, 영어, 일본어 지원 (i18next)
+- **Mock/Server 모드**: 개발용 Mock 데이터와 실제 서버 API 전환 가능
+- **주황색 디자인**: 따뜻한 느낌의 주황색 기반 UI/UX
+- **회원가입 불필요**: OAuth2 인증 없이 퍼블릭 접근 가능
+- **자동 저장**: 브라우저 LocalStorage를 활용한 진행상황 자동 저장
+- **반응형 디자인**: 모바일, 태블릿, 데스크탑 모든 환경 지원
+- **간편한 배포**: GitHub Pages를 통한 정적 호스팅
 
 ## 기술 스택
 
@@ -16,8 +19,9 @@
 - React Hook Form
 - React Query (TanStack Query)
 - Zustand
-- Tailwind CSS
+- Tailwind CSS (주황색 기반 커스텀 테마)
 - React Router v6
+- i18next (다국어 지원)
 - Vite
 
 ## 시작하기
@@ -83,10 +87,38 @@ seniorvibe-ils-survey/
 ## 환경변수
 
 ```env
+# API 설정
 VITE_API_BASE_URL=http://localhost:8080/api/v1
+# Mock 데이터 사용 여부 (true: Mock 모드, false: 서버 모드)
+VITE_USE_MOCK_DATA=true
+
+# 앱 설정
 VITE_APP_TITLE=SeniorVibe ILS Survey
 VITE_APP_VERSION=0.1.0
 ```
+
+### Mock 모드 vs 서버 모드
+
+- **Mock 모드** (`VITE_USE_MOCK_DATA=true`): 로컬 개발 시 실제 서버 없이 Mock 데이터로 테스트 가능
+- **서버 모드** (`VITE_USE_MOCK_DATA=false`): 실제 백엔드 API 서버와 연동
+
+## 다국어 지원
+
+애플리케이션은 다음 언어를 지원합니다:
+- 한국어 (ko)
+- 영어 (en)
+- 일본어 (ja)
+
+사용자는 UI 우측 상단의 언어 전환 버튼으로 언어를 변경할 수 있습니다.
+
+## 디자인 시스템
+
+프로젝트는 따뜻한 느낌의 주황색 기반 디자인 시스템을 사용합니다:
+- **Primary Color**: Orange (#f97316)
+- **Secondary Color**: Amber (#d97706)
+- **Accent Color**: Blue (#3b82f6)
+
+`tailwind.config.js`에서 커스텀 색상 팔레트를 확인할 수 있습니다.
 
 ## 라이센스
 
@@ -98,5 +130,3 @@ This project is licensed under the MIT License.
 - 이슈 트래커: https://github.com/yourusername/seniorvibe-ils-survey/issues
 
 
-local로 실행했을 때, mock 데이터를 사용하는 방식과 서버에 연동되는 방식 두 가지를 구분해서 실행할 수 있도록 추가 구현해주고, 내용은 일본어와 영어까지 다국어로 반영되어야 하기 때문에 i18을 사용해서 다국어 대응을 구현해줘. 마지막으로 우리 회사의 기본 컬러가 따뜻한 느낌의         
-주황색이기 때문에 [Image #1]의 내용을 고려해서 디자인을 주황색 위주의 감성으로 바꿔줘. 
