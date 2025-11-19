@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSurveyStore } from '../store/surveyStore';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import ApiModeIndicator from '../components/ApiModeIndicator';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -11,6 +10,7 @@ function LandingPage() {
   const progress = getProgress();
 
   const handleStart = () => {
+    window.scrollTo(0, 0);
     navigate('/personal-info');
   };
 
@@ -19,10 +19,9 @@ function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4 pt-20 pb-24">
       {/* Header with Language Switcher and API Mode */}
       <div className="fixed top-4 right-4 flex items-center gap-4 z-50">
-        <ApiModeIndicator />
         <LanguageSwitcher />
       </div>
 
@@ -55,7 +54,7 @@ function LandingPage() {
               </div>
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-700">{t('landing.estimatedTime')}</p>
-                <p className="text-xs text-gray-500">3-5 {t('landing.minutes')}</p>
+                <p className="text-xs text-gray-500">3{t('landing.minutes')}</p>
               </div>
             </div>
             <div className="flex flex-col items-center p-4 bg-white border-2 border-primary-100 rounded-xl hover:border-primary-300 transition-colors">
@@ -75,12 +74,12 @@ function LandingPage() {
                 </svg>
               </div>
               <div className="text-center">
-                <p className="text-sm font-medium text-gray-700">{t('landing.features.autoSave')}</p>
+                <p className="text-sm font-medium text-gray-700">{t('landing.features.giveDocument')}</p>
               </div>
             </div>
           </div>
 
-          {personalInfo && progress > 0 ? (
+          {personalInfo && progress > 0 && (
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-primary-50 to-secondary-50 border-2 border-primary-200 rounded-xl p-6">
                 <p className="text-primary-800 font-semibold mb-3 text-lg">
@@ -111,14 +110,19 @@ function LandingPage() {
                 </button>
               </div>
             </div>
-          ) : (
-            <button
-              onClick={handleStart}
-              className="w-full max-w-md mx-auto bg-gradient-warm text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-primary-lg transition-all duration-300 transform hover:-translate-y-0.5"
-            >
-              {t('landing.startButton')}
-            </button>
           )}
+        </div>
+      </div>
+
+      {/* Fixed Start Button */}
+      <div className="fixed bottom-4 left-4 right-4 z-40">
+        <div className="max-w-md mx-auto">
+          <button
+            onClick={handleStart}
+            className="w-full bg-gradient-warm text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-primary-lg transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg"
+          >
+            {t('landing.startButton')}
+          </button>
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useSurveyStore } from '../store/surveyStore';
 import { PersonalInfo } from '../types';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import ApiModeIndicator from '../components/ApiModeIndicator';
 
 interface PersonalInfoForm {
   email: string;
@@ -41,12 +40,8 @@ function PersonalInfoPage() {
     navigate('/survey');
   };
 
-  const ageGroups = [
-    { value: '50s', label: t('personalInfo.ageGroups.50s') },
-    { value: '60s', label: t('personalInfo.ageGroups.60s') },
-    { value: '70s', label: t('personalInfo.ageGroups.70s') },
-    { value: '80plus', label: t('personalInfo.ageGroups.80plus') }
-  ];
+  const ageGroups = Object.entries(t('personalInfo.ageGroups', { returnObjects: true }) as Record<string, string>)
+    .map(([value, label]) => ({ value, label }));
 
   const genders = [
     { value: 'male', label: t('personalInfo.genders.male') },
@@ -58,7 +53,6 @@ function PersonalInfoPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4 pt-20">
       {/* Header with Language Switcher and API Mode */}
       <div className="fixed top-4 right-4 flex items-center gap-4 z-50">
-        <ApiModeIndicator />
         <LanguageSwitcher />
       </div>
 

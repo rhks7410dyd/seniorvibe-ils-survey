@@ -2,12 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSurveyStore } from '../store/surveyStore';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import ApiModeIndicator from '../components/ApiModeIndicator';
 
 function ResultPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { personalInfo, resetSurvey, pinNumber } = useSurveyStore();
+  const { resetSurvey, pinNumber } = useSurveyStore();
 
   const handleNewSurvey = () => {
     resetSurvey();
@@ -18,7 +17,6 @@ function ResultPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4 pt-20">
       {/* Header with Language Switcher and API Mode */}
       <div className="fixed top-4 right-4 flex items-center gap-4 z-50">
-        <ApiModeIndicator />
         <LanguageSwitcher />
       </div>
 
@@ -55,13 +53,16 @@ function ResultPage() {
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
             {t('result.title')}
           </h1>
-          <p className="text-xl text-gray-600 mb-2">
-            {t('result.thankYou')}
-          </p>
-          <p className="text-lg text-gray-500 mb-8">
-            {t('result.description')}
-          </p>
-
+          <div className="text-xl text-gray-600 mb-2">
+            <p>{t('result.nextStep1')}</p>
+            <p>{t('result.nextStep2')}</p>
+          </div>
+          <div className="text-lg text-gray-500 mb-8">
+            <p>{t('result.description1')}</p>
+            <p>{t('result.description2')}</p>
+            <p>{t('result.description3')}</p>
+          </div>
+          
           {/* PIN Number 출력 */}
           {pinNumber && (
             <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-6 mb-8">
@@ -76,37 +77,6 @@ function ResultPage() {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {/* 참가자 정보 */}
-          {personalInfo && (
-            <div className="bg-white border-2 border-primary-100 rounded-xl p-6 mb-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                {t('personalInfo.title')}
-              </h2>
-              <div className="space-y-3 text-left max-w-md mx-auto">
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">{t('personalInfo.name')}:</span>
-                  <span className="font-semibold text-gray-900">{personalInfo.name}</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">{t('personalInfo.email')}:</span>
-                  <span className="font-semibold text-gray-900">{personalInfo.email}</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">{t('personalInfo.ageGroup')}:</span>
-                  <span className="font-semibold text-gray-900">
-                    {t(`personalInfo.ageGroups.${personalInfo.ageGroup}`)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">{t('personalInfo.gender')}:</span>
-                  <span className="font-semibold text-gray-900">
-                    {t(`personalInfo.genders.${personalInfo.gender}`)}
-                  </span>
-                </div>
               </div>
             </div>
           )}

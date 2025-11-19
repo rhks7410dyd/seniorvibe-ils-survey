@@ -72,11 +72,37 @@ export const surveyAPI = {
     // Server 모드인 경우 실제 API 호출
     try {
       console.log('[SERVER MODE] Fetching questions from API');
-      const response = await apiClient.get<ApiResponse<QuestionsResponse>>(
-        '/survey/questions',
-        { params }
-      );
-      return response.data.data?.questions || [];
+      const response = await apiClient.get<{
+        isSuccess: boolean;
+        code: string;
+        message: string;
+        result: {
+          questions: {
+            id: number;
+            questionTextKo: string;
+            questionTextEn: string;
+            questionTextJp: string;
+            source: string;
+            subjectiveMemo: string;
+            memo: string;
+          }[];
+          totalCount: number;
+        };
+      }>('/ils/questions', { params });
+
+      if (response.data.isSuccess && response.data.result) {
+        // 백엔드 응답을 프런트엔드 타입으로 변환
+        return response.data.result.questions.map((q, index) => ({
+          id: q.id.toString(),
+          type: 'yes_no' as const,
+          category: 'health' as const,
+          title: q.questionTextKo,
+          description: q.memo,
+          required: true,
+          order: index + 1
+        }));
+      }
+      return [];
     } catch (error) {
       console.error('Failed to fetch questions:', error);
       throw error;

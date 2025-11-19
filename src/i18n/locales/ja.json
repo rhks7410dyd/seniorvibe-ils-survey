@@ -11,7 +11,7 @@
     "minutes": "分",
     "features": {
       "anonymous": "匿名参加",
-      "autoSave": "自動保存",
+      "giveDocument": "自動保存",
       "mobile": "モバイル最適化"
     }
   },
@@ -24,6 +24,9 @@
     "namePlaceholder": "お名前を入力してください",
     "ageGroup": "年齢層",
     "ageGroups": {
+      "20s": "20代",
+      "30s": "30代",
+      "40s": "40代",
       "50s": "50代",
       "60s": "60代",
       "70s": "70代",

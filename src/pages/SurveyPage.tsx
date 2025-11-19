@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useSurveyStore } from '../store/surveyStore';
 import { surveyAPI } from '../services/api';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import ApiModeIndicator from '../components/ApiModeIndicator';
 
 function SurveyPage() {
   const navigate = useNavigate();
@@ -364,7 +363,6 @@ function SurveyPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-8 px-4 pt-24">
       {/* Header with Language Switcher and API Mode */}
       <div className="fixed top-4 right-4 flex items-center gap-4 z-50">
-        <ApiModeIndicator />
         <LanguageSwitcher />
       </div>
 

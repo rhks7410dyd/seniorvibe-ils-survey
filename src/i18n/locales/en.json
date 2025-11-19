@@ -11,7 +11,7 @@
     "minutes": "minutes",
     "features": {
       "anonymous": "Anonymous",
-      "autoSave": "Auto Save",
+      "giveDocument": "Auto Save",
       "mobile": "Mobile Optimized"
     }
   },
@@ -24,6 +24,9 @@
     "namePlaceholder": "Enter your name",
     "ageGroup": "Age Group",
     "ageGroups": {
+      "20s": "20s",
+      "30s": "30s",
+      "40s": "40s",
       "50s": "50s",
       "60s": "60s",
       "70s": "70s",
