@@ -66,7 +66,6 @@ export const buildApiUrl = (endpoint: string): string => {
 
 ```typescript
 interface UseOXQuestionsOptions {
-  category?: string;        // 질문 카테고리 필터
   lang?: string;           // 언어 설정 (기본: 'ko')
   autoFetch?: boolean;     // 자동 데이터 가져오기 (기본: true)
   useMock?: boolean;       // 목 데이터 사용 여부
@@ -117,9 +116,8 @@ function OXSurveyComponent() {
 ### 고급 사용법
 
 ```typescript
-// 특정 카테고리의 O/X 질문만 가져오기
+// 특정 언어로 O/X 질문 가져오기
 const { questions } = useOXQuestions({
-  category: 'health',
   lang: 'ko'
 });
 
@@ -147,7 +145,6 @@ const { questions } = useOXQuestions({
 - **프로덕션**: `https://your-production-domain.com/api/survey/ox-questions`
 
 ### 요청 파라미터
-- `category` (선택): 질문 카테고리 ('health', 'lifestyle', 'technology', 'social', 'general')
 - `lang` (선택): 언어 코드 (기본값: 'ko')
 
 ### 요청 헤더
@@ -168,7 +165,6 @@ const { questions } = useOXQuestions({
     {
       "id": "q1",
       "type": "yes_no",
-      "category": "health",
       "title": "하루에 8시간 이상 잠을 자시나요?",
       "description": "충분한 수면은 건강에 중요합니다.",
       "required": true,
@@ -184,7 +180,6 @@ const { questions } = useOXQuestions({
   {
     "id": "q1",
     "type": "yes_no",
-    "category": "health",
     "title": "하루에 8시간 이상 잠을 자시나요?",
     "description": "충분한 수면은 건강에 중요합니다.",
     "required": true,
