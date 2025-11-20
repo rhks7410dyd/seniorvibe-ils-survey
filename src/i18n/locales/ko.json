@@ -71,7 +71,9 @@
     "shareButton": "공유하기",
     "newSurveyButton": "새 설문조사 시작",
     "pinNumberTitle": "PIN 번호",
-    "answeredQuestions": "답변한 질문"
+    "answeredQuestions": "답변한 질문",
+    "savePinImage": "PIN 번호 이미지로 저장",
+    "boothPost":"부스 위치"
   },
   "errors": {
     "required": "필수 항목입니다",

@@ -1,27 +1,26 @@
 {
   "app": {
-    "title": "SeniorVibe ILS アンケート",
-    "subtitle": "展示会参加者アンケート"
+    "title": "あなたの肩の年齢は何歳ですか？",
+    "subtitle": "3分測定で「関節年齢」を精密に可視化するAI肩機能テスト"
   },
   "landing": {
-    "welcome": "ようこそ",
-    "description": "アンケートにご参加いただきありがとうございます。あなたの貴重なご意見をお聞かせください。",
-    "startButton": "アンケート開始",
-    "estimatedTime": "所要時間",
+    "description": "現在、商用化前（プレローンチ）の無料体験イベントとして、現場で正確な状態分析と実物レポートをその場で提供いたします。",
+    "startButton": "アンケートを開始する",
+    "estimatedTime": "推定所要時間",
     "minutes": "分",
     "features": {
-      "anonymous": "匿名参加",
-      "giveDocument": "自動保存",
+      "anonymous": "徹底したデータ管理",
+      "giveDocument": "実物レポート提供",
       "mobile": "モバイル最適化"
     }
   },
   "personalInfo": {
     "title": "個人情報入力",
-    "description": "アンケートを開始する前に基本情報を入力してください。",
-    "email": "メールアドレス",
+    "description": "正確な「肩の年齢」算出と個人別機能分析のために、最小限の基本情報をお願いしております。ご入力いただいたお名前などはレポート表記にのみ使用され、内部システムではすべての情報が匿名で処理されます。この情報は正確な結果提供と分析高度化の目的以外には使用されません。ご要望に応じて即座に破棄されます。",
+    "email": "メール",
     "emailPlaceholder": "your@email.com",
-    "name": "お名前",
-    "namePlaceholder": "お名前を入力してください",
+    "name": "名前",
+    "namePlaceholder": "名前を入力してください",
     "ageGroup": "年齢層",
     "ageGroups": {
       "20s": "20代",
@@ -40,13 +39,13 @@
     },
     "eventCode": "イベントコード（任意）",
     "eventCodePlaceholder": "イベントコードを入力してください",
-    "marketingConsent": "マーケティング情報の受信に同意する",
+    "marketingConsent": "マーケティング情報受信同意",
     "nextButton": "次へ",
     "backButton": "戻る"
   },
   "survey": {
     "title": "アンケート",
-    "progress": "進行状況",
+    "progress": "進捗率",
     "question": "質問",
     "of": "/",
     "required": "必須",
@@ -56,30 +55,36 @@
     "textPlaceholder": "回答を入力してください",
     "nextButton": "次へ",
     "previousButton": "前へ",
-    "submitButton": "送信",
-    "saveProgress": "進行状況が保存されました"
+    "submitButton": "提出する",
+    "saveProgress": "進捗状況が保存されました"
   },
   "result": {
-    "title": "アンケート完了",
-    "thankYou": "アンケートにご参加いただきありがとうございます！",
-    "description": "あなたのご意見は、より良いサービスを作るために大変役立ちます。",
+    "title": "アンケート完了、あなたの結果は？",
+    "thankYou": "アンケートにご協力いただきありがとうございます！",
+    "nextStep1": "近くの担当者にPIN入力方法をお尋ねください。",
+    "nextStep2": "これから肩機能の精密分析を開始します。",
+    "description1": "① PCT国際出願・特許技術が適用されたAIモーション分析で、首・肩の角度・可動域・対称性を精密に測定します。",
+    "description2": "② アルゴリズムは臨床研究・医学論文・標準化された動きのデータに基づいて構築されています。",
+    "description3": "③ 動作撮影時の角度・可動域分析の精度は80%以上で検証されており、信頼できます。",
     "resultId": "結果ID",
     "downloadButton": "結果をダウンロード",
-    "shareButton": "共有",
+    "shareButton": "共有する",
     "newSurveyButton": "新しいアンケートを開始",
-    "pinNumberTitle": "PIN 番号",
-    "answeredQuestions": "回答した質問"
+    "pinNumberTitle": "PIN番号",
+    "answeredQuestions": "回答済みの質問",
+    "savePinImage": "PIN番号を画像で保存",
+    "boothPost":"ブースの場所"
   },
   "errors": {
     "required": "必須項目です",
     "invalidEmail": "有効なメールアドレスを入力してください",
     "networkError": "ネットワークエラーが発生しました",
-    "submitError": "送信中にエラーが発生しました",
+    "submitError": "提出中にエラーが発生しました",
     "loadError": "データの読み込み中にエラーが発生しました"
   },
   "language": {
-    "ko": "한국어",
-    "en": "English",
+    "ko": "韓国語",
+    "en": "英語",
     "ja": "日本語",
     "select": "言語選択"
   },

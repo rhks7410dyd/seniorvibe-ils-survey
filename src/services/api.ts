@@ -72,35 +72,45 @@ export const surveyAPI = {
     // Server 모드인 경우 실제 API 호출
     try {
       console.log('[SERVER MODE] Fetching questions from API');
-      const response = await apiClient.get<{
+
+      // 백엔드 응답 타입 정의
+      interface BackendQuestion {
+        id: number;
+        questionText: string;
+        source: string;
+        subjectiveMemo: string;
+        criterion: string;
+      }
+
+      interface BackendResponse {
         isSuccess: boolean;
         code: string;
         message: string;
         result: {
-          questions: {
-            id: number;
-            questionTextKo: string;
-            questionTextEn: string;
-            questionTextJp: string;
-            source: string;
-            subjectiveMemo: string;
-            memo: string;
-          }[];
+          questions: BackendQuestion[];
           totalCount: number;
         };
-      }>('/ils/questions', { params });
+      }
+
+      const response = await apiClient.get<BackendResponse>('/ils/questions', { params });
 
       if (response.data.isSuccess && response.data.result) {
+        console.log('Backend response questions:', response.data.result.questions);
+
         // 백엔드 응답을 프런트엔드 타입으로 변환
-        return response.data.result.questions.map((q, index) => ({
-          id: q.id.toString(),
-          type: 'yes_no' as const,
-          category: 'health' as const,
-          title: q.questionTextKo,
-          description: q.memo,
-          required: true,
-          order: index + 1
-        }));
+        return response.data.result.questions.map((q, index) => {
+          console.log('Question mapping:', q);
+          return {
+            id: q.id.toString(),
+            type: 'yes_no' as const,
+            category: 'health' as const,
+            title: q.questionText,
+            description: q.criterion,
+            criterion: q.criterion,
+            required: true,
+            order: index + 1
+          };
+        });
       }
       return [];
     } catch (error) {
@@ -109,7 +119,7 @@ export const surveyAPI = {
     }
   },
 
-  // 설문 제출
+  // 설문 제출 (ILS 회원가입)
   submitSurvey: async (data: SurveySubmitRequest): Promise<SubmitResponse> => {
     // Mock 모드인 경우 mock 응답 반환
     if (USE_MOCK_DATA) {
@@ -119,17 +129,48 @@ export const surveyAPI = {
 
     // Server 모드인 경우 실제 API 호출
     try {
-      console.log('[SERVER MODE] Submitting survey to API');
-      const response = await apiClient.post<ApiResponse<SubmitResponse>>(
-        '/survey/submit',
-        data
-      );
-      if (response.data.success && response.data.data) {
-        return response.data.data;
+      console.log('[SERVER MODE] Creating ILS user with survey data');
+
+      // 프론트엔드 데이터를 백엔드 형식으로 변환
+      const surveyAnswers: { [key: number]: boolean } = {};
+      data.answers.forEach(answer => {
+        const questionId = parseInt(answer.questionId);
+        // NaN이나 유효하지 않은 숫자는 제외
+        if (!isNaN(questionId) && isFinite(questionId)) {
+          surveyAnswers[questionId] = answer.value;
+        }
+      });
+
+      const ilsUserData = {
+        email: data.personalInfo.email,
+        name: data.personalInfo.name,
+        gender: data.personalInfo.gender.toUpperCase(),
+        ageGroup: data.personalInfo.ageGroup,
+        surveyAnswers: surveyAnswers
+      };
+
+      const response = await apiClient.post<{
+        isSuccess: boolean;
+        code: string;
+        message: string;
+        result: {
+          name: string;
+          email: string;
+          pin: string;
+        };
+      }>('/ils/user-create', ilsUserData);
+
+      if (response.data.isSuccess && response.data.result) {
+        // ILS 응답을 SubmitResponse 형식으로 변환
+        return {
+          sessionId: data.sessionId,
+          pinNumber: response.data.result.pin,
+          completedAt: new Date().toISOString()
+        };
       }
-      throw new Error(response.data.error?.message || 'Submit failed');
+      throw new Error(response.data.message || 'ILS user creation failed');
     } catch (error) {
-      console.error('Failed to submit survey:', error);
+      console.error('Failed to create ILS user:', error);
       throw error;
     }
   },
