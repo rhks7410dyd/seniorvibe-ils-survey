@@ -22,7 +22,6 @@ function ResultPage() {
     try {
       const canvas = await html2canvas(pinCardRef.current, {
         background: '#ffffff',
-        scale: 2, // 고해상도
         useCORS: true,
         allowTaint: true
       });

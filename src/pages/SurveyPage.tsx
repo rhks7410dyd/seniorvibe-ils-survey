@@ -17,7 +17,6 @@ function SurveyPage() {
     setCurrentQuestionIndex,
     answers,
     setAnswer,
-    getProgress,
     sessionId,
     startedAt,
     setStartedAt,
