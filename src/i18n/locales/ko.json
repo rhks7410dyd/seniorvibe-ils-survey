@@ -1,29 +1,31 @@
 {
   "app": {
-    "title": "SeniorVibe ILS 설문조사",
-    "subtitle": "박람회 참가자 설문조사"
+    "title": "당신의 어깨 나이는 몇 살입니까?",
+    "subtitle": "3분 측정으로 ‘관절 나이’를 정밀 시각화하는 AI 어깨 기능 테스트"
   },
   "landing": {
-    "welcome": "환영합니다",
-    "description": "설문조사에 참여해 주셔서 감사합니다. 귀하의 소중한 의견을 듣고 싶습니다.",
+    "description": "현재 상용화 전(Pre-launch) 무료 체험 이벤트로, 현장에서 정확한 상태 분석과 실물 리포트를 현장에서 바로 제공해드립니다.",
     "startButton": "설문 시작하기",
     "estimatedTime": "예상 소요 시간",
     "minutes": "분",
     "features": {
-      "anonymous": "익명 참여",
-      "autoSave": "자동 저장",
+      "anonymous": "철저한 데이터 관리",
+      "giveDocument": "실물 리포트 제공",
       "mobile": "모바일 최적화"
     }
   },
   "personalInfo": {
     "title": "개인정보 입력",
-    "description": "설문조사를 시작하기 전에 기본 정보를 입력해주세요.",
+    "description": "정확한 ‘어깨 나이’ 산출과 개인별 기능 분석을 위해 최소한의 기본 정보를 요청드립니다. 입력하신 성함 등은 보고서 표기에만 사용되며, 내부 시스템에서는 모든 정보가 익명으로 처리됩니다. 해당 정보는 정확한 결과 제공과 분석 고도화를 위한 목적 외에는 사용되지 않습니다. 요청 즉시 파기 됩니다.",
     "email": "이메일",
     "emailPlaceholder": "your@email.com",
     "name": "이름",
     "namePlaceholder": "이름을 입력하세요",
     "ageGroup": "연령대",
     "ageGroups": {
+      "20s": "20대",
+      "30s": "30대",
+      "40s": "40대",
       "50s": "50대",
       "60s": "60대",
       "70s": "70대",
@@ -57,15 +59,21 @@
     "saveProgress": "진행 상황 저장됨"
   },
   "result": {
-    "title": "설문 완료",
+    "title": "설문 완료, 당신의 결과는?",
     "thankYou": "설문조사에 참여해 주셔서 감사합니다!",
-    "description": "귀하의 의견은 더 나은 서비스를 만드는 데 큰 도움이 됩니다.",
+    "nextStep1":"근처 운영자에게 PIN 입력 방법을 문의해 주세요.",
+    "nextStep2":"이제 어깨 기능 정밀 분석을 시작합니다.",
+    "description1": "① PCT 국제출원·특허 기술이 적용된 AI 모션 분석으로 목·어깨 각도·가동범위·대칭성을 정밀 측정합니다.",
+    "description2": "② 알고리즘은 임상 연구·의학 논문·표준화된 움직임 데이터를 기반으로 구축되었습니다.",
+    "description3": "③ 동작 촬영 시 각도·가동범위 분석 정확도는 80% 이상으로 검증되어 신뢰할 수 있습니다.",
     "resultId": "결과 ID",
     "downloadButton": "결과 다운로드",
     "shareButton": "공유하기",
     "newSurveyButton": "새 설문조사 시작",
     "pinNumberTitle": "PIN 번호",
-    "answeredQuestions": "답변한 질문"
+    "answeredQuestions": "답변한 질문",
+    "savePinImage": "PIN 번호 이미지로 저장",
+    "boothPost":"부스 위치"
   },
   "errors": {
     "required": "필수 항목입니다",

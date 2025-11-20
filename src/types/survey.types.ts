@@ -29,6 +29,7 @@ export interface Question {
   category: QuestionCategory;
   title: string;
   description?: string;
+  criterion?: string;
   options?: QuestionOption[];
   required: boolean;
   order: number;
@@ -95,8 +96,7 @@ export interface QuestionsResponse {
 }
 
 export interface SubmitResponse {
-  resultId: string;
-  participantId: string;
-  message: string;
+  sessionId: string;
   pinNumber?: string;
+  completedAt: string;
 }

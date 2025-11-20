@@ -256,9 +256,8 @@ export const mockSubmitSurvey = async (
   const pinNumber = Math.floor(100000 + Math.random() * 900000).toString();
 
   return {
-    resultId: `mock_${crypto.randomUUID()}`,
-    participantId: `participant_${crypto.randomUUID()}`,
-    message: 'Survey submitted successfully',
+    sessionId: _data.sessionId,
+    completedAt: new Date().toISOString(),
     pinNumber
   };
 };

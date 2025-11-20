@@ -1,33 +1,35 @@
 {
   "app": {
-    "title": "SeniorVibe ILS Survey",
-    "subtitle": "Exhibition Participant Survey"
+    "title": "What is your shoulder age?",
+    "subtitle": "AI shoulder function test that precisely visualizes 'joint age' with a 3-minute measurement"
   },
   "landing": {
-    "welcome": "Welcome",
-    "description": "Thank you for participating in our survey. We value your opinion.",
+    "description": "Currently, as a free pre-launch trial event, we provide accurate status analysis and a physical report on-site.",
     "startButton": "Start Survey",
     "estimatedTime": "Estimated Time",
     "minutes": "minutes",
     "features": {
-      "anonymous": "Anonymous",
-      "autoSave": "Auto Save",
-      "mobile": "Mobile Optimized"
+      "anonymous": "Thorough Data Management",
+      "giveDocument": "Physical Report Provided",
+      "mobile": "Mobile Optimization"
     }
   },
   "personalInfo": {
-    "title": "Personal Information",
-    "description": "Please enter your basic information before starting the survey.",
+    "title": "Enter Personal Information",
+    "description": "We request minimal basic information for accurate 'shoulder age' calculation and individual function analysis. The name you enter will only be used for report notation, and all information will be processed anonymously within the internal system. This information will not be used for any purpose other than providing accurate results and enhancing analysis. It will be destroyed immediately upon request.",
     "email": "Email",
     "emailPlaceholder": "your@email.com",
     "name": "Name",
     "namePlaceholder": "Enter your name",
     "ageGroup": "Age Group",
     "ageGroups": {
+      "20s": "20s",
+      "30s": "30s",
+      "40s": "40s",
       "50s": "50s",
       "60s": "60s",
       "70s": "70s",
-      "80plus": "80+"
+      "80plus": "80s or older"
     },
     "gender": "Gender",
     "genders": {
@@ -37,7 +39,7 @@
     },
     "eventCode": "Event Code (Optional)",
     "eventCodePlaceholder": "Enter event code",
-    "marketingConsent": "Agree to receive marketing information",
+    "marketingConsent": "Consent to receive marketing information",
     "nextButton": "Next",
     "backButton": "Back"
   },
@@ -45,7 +47,7 @@
     "title": "Survey",
     "progress": "Progress",
     "question": "Question",
-    "of": "of",
+    "of": "/",
     "required": "Required",
     "optional": "Optional",
     "selectOne": "Select one",
@@ -57,27 +59,33 @@
     "saveProgress": "Progress saved"
   },
   "result": {
-    "title": "Survey Completed",
-    "thankYou": "Thank you for participating in our survey!",
-    "description": "Your feedback helps us create better services.",
+    "title": "Survey Complete, What are Your Results?",
+    "thankYou": "Thank you for participating in the survey!",
+    "nextStep1": "Please ask the nearby operator how to enter the PIN.",
+    "nextStep2": "Now, we will begin a precise analysis of shoulder function.",
+    "description1": "① AI motion analysis, applying PCT international patent technology, precisely measures neck and shoulder angles, range of motion, and symmetry.",
+    "description2": "② The algorithm is built based on clinical research, medical papers, and standardized movement data.",
+    "description3": "③ The accuracy of angle and range of motion analysis during motion capture has been verified to be over 80%, ensuring reliability.",
     "resultId": "Result ID",
-    "downloadButton": "Download Results",
+    "downloadButton": "Download Result",
     "shareButton": "Share",
     "newSurveyButton": "Start New Survey",
     "pinNumberTitle": "PIN Number",
-    "answeredQuestions": "Answered Questions"
+    "answeredQuestions": "Answered Questions",
+    "savePinImage": "Save PIN as Image",
+    "boothPost":"Booth Location"
   },
   "errors": {
-    "required": "This field is required",
+    "required": "Required field",
     "invalidEmail": "Please enter a valid email address",
     "networkError": "A network error occurred",
     "submitError": "An error occurred during submission",
     "loadError": "An error occurred while loading data"
   },
   "language": {
-    "ko": "한국어",
+    "ko": "Korean",
     "en": "English",
-    "ja": "日本語",
+    "ja": "Japanese",
     "select": "Select Language"
   },
   "mode": {
