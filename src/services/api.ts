@@ -3,7 +3,6 @@ import {
   Question,
   SurveySubmitRequest,
   ApiResponse,
-  QuestionsResponse,
   SubmitResponse
 } from '../types';
 import {

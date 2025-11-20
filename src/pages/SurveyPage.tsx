@@ -26,7 +26,7 @@ function SurveyPage() {
 
   const [currentAnswer, setCurrentAnswer] = useState<any>(null);
   const [isSubmittingRef, setIsSubmittingRef] = useState(false);
-  const [pendingTimeoutIds, setPendingTimeoutIds] = useState<Set<NodeJS.Timeout>>(new Set());
+  const [pendingTimeoutIds, setPendingTimeoutIds] = useState<Set<number>>(new Set());
 
   // 인적정보가 없으면 리다이렉트
   useEffect(() => {
@@ -139,7 +139,6 @@ function SurveyPage() {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
-  const progress = getProgress();
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const canProceed = currentAnswer !== null && currentAnswer !== '';
 
